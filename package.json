@@ -1,0 +1,21 @@
+{
+  "name": "sounder",
+  "version": "1.0.0",
+  "description": "Get sound clips from soundy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "alexa",
+    "skill",
+    "sounds",
+    "audio clips"
+  ],
+  "author": "Ryan Gill",
+  "license": "MIT",
+  "dependencies": {
+    "alexa-sdk": "^1.0.0",
+    "request": "^2.74.0"
+  }
+}

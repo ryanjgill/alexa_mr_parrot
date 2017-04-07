@@ -65,7 +65,7 @@ let handlers = {
                             url: `https:${audioUrl}`,
                             token: "0",
                             expectedPreviousToken: null,
-                            offsetInMilliseconds: 200
+                            offsetInMilliseconds: 0
                         }
                     }
                 }

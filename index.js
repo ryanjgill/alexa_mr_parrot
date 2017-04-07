@@ -8,7 +8,7 @@ const Alexa = require('alexa-sdk')
 
 function getSoundFromSoundy(term, callback) {
   const baseUrl = `https://www.soundy.top/api/sounds`;
-  let searchUrl = term ? `${baseUrl}?${term}` : baseUrl;
+  let searchUrl = term ? `${baseUrl}?q=${term}` : baseUrl;
 
   console.log('URL: ', searchUrl);
 

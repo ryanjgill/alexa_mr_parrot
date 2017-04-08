@@ -16,9 +16,21 @@ function getSoundFromSoundy(term, callback) {
     if (!error && response.statusCode == 200) {
       // parse the body and format for desired output
       let data = JSON.parse(body)[0]; // taking the first item in the returned results
-      return callback(data.name, data.url, searchUrl);
+
+      if (!data || !data.hasOwnProperty('url')) {
+        return callback({
+          type: 'no_results',
+          term: term
+        });
+      }
+
+      return callback(null, data.name, data.url, searchUrl);
     } else {
-      throw(new Error('Request failed!'));
+      console.log('ERROR: ', error);
+      return callback({
+        type: 'service_down',
+        term: term
+      });
     }
   });
 }
@@ -43,27 +55,36 @@ let handlers = {
       : '';
 
 
-    getSoundFromSoundy(term, function(name, url, searchUrl) {
+    getSoundFromSoundy(term, function(err, name, url, searchUrl) {
+      // if no matching results, respond with search term.
+      if (err && err.type === 'no_results') {
+        let speechOutput = `I searched for term: ${err.term} but didn't find any matches.`;
+        this.emit(':tellWithCard', speechOutput, 'No matching results', speechOutput);
+        return;
+      }
+
+      // if api error, respond with message saying its down
+      if (err && err.type === 'service_down') {
+        let speechOutput = `The sound a. p. i. service appears to be down. Please try again later.`;
+        this.emit(':tellWithCard', speechOutput, 'Search API is down', speechOutput);
+        return;
+      }
+
+      // Play audio from url of matching clip
       let audioUrl = url.split('.mp3')[0] + '.mp3';
-      let audioHtml = `<audio src="http:${audioUrl}" />`
-      let speechOutput = `I searched for term: ${term} and I found a sound matching the name: ${name}. ${audioHtml}`;
-      let cardTitle = `Sound found!`;
-      let cardContent = url;
-
-      //this.emit(':tellWithCard', speechOutput, cardTitle, cardContent);
-
+      let audioHtml = `<audio src='http:${audioUrl}' />`
       let response = {
-        version: "1.0",
+        version: '1.0',
         response: {
             shouldEndSession: true,
             directives: [
                 {
-                    type: "AudioPlayer.Play",
-                    playBehavior: "REPLACE_ALL",
+                    type: 'AudioPlayer.Play',
+                    playBehavior: 'REPLACE_ALL',
                     audioItem: {
                         stream: {
                             url: `https:${audioUrl}`,
-                            token: "0",
+                            token: '0',
                             expectedPreviousToken: null,
                             offsetInMilliseconds: 0
                         }
@@ -84,6 +105,7 @@ let handlers = {
 
     this.emit(':ask', speechOutput, reprompt);
   },
+
   'AMAZON.CancelIntent': function() {
     this.emit(':tell', 'Goodbye!');
   },

@@ -1,14 +1,17 @@
-## Alexa Sounder
-Plays audio clips from soundy.
+## Alexa Parrot
+Plays random audio clips based on search term.
 
 #### Engage Alexa like:
-`Alexa ask Sounder for Ain't nobody got time for that.`
+`Alexa ask Parrot to imperonate Rick Sanchez.`
 
-`Alexa search Sounder for Dogs.`
+`Alexa ask Parrot to mimic Dogs.`
 
-`Alexa ask Sounder to find Mario`
+`Alexa ask Parrot to imitate Mario.`
 
-`Echo Sounder find Laughing`
+`Echo ask Parrot to imitate Wedding March.`
+
+##### Links to Lamda and Alex skill
+So many things on aws, I loose track where these guys live.
 
 ###### Lamda functions 
 https://console.aws.amazon.com/lambda/home?region=us-east-1#/functions?display=list

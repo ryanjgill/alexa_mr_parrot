@@ -1,5 +1,5 @@
 {
-  "name": "sounder",
+  "name": "alexa_parrot",
   "version": "1.0.0",
   "description": "Get sound clips from soundy",
   "main": "index.js",

@@ -4,7 +4,7 @@ Plays random audio clips based on search term.
 #### Engage Alexa like:
 `Alexa ask Parrot to imperonate Rick Sanchez.`
 
-`Alexa ask Parrot to mimic Dogs.`
+`Alexa ask Parrot to mimic dogs.`
 
 `Alexa ask Parrot to imitate Mario.`
 

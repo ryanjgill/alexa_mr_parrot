@@ -96,7 +96,7 @@ let handlers = {
   'OutsideRange': function (index) {
     let totalResults = this.attributes.searchResults.length;
     let reprompt = `pick a number between 1 and ${this.attributes.searchResults.length}`;
-    let speechOutput = `${index} is outside the range, Please ${reprompt}`;
+    let speechOutput = `${index+1} is outside the range, Please ${reprompt}`;
     this.emit(':ask', speechOutput, reprompt);
   },
   'SelectResult': function () {

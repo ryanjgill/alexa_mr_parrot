@@ -85,7 +85,7 @@ let handlers = {
   'AMAZON.StopIntent': function () {
     this.emit(':tell', 'Goodbye!');
   },
-  'MultipleSearchResults': function (term, results) {
+  'MultipleSearchResults': function (results) {
     let speechOutput = `I found a lot of answers, pick a number between 1 and ${results.length}.`
     let reprompt = `Pick a number between 1 and ${results.length}.`;
 
@@ -95,7 +95,7 @@ let handlers = {
   },
   'OutsideRange': function (index) {
     let totalResults = this.attributes.searchResults.length;
-    let reprompt = 'pick a number between 1 and ${this.attributes.searchResults.length}';
+    let reprompt = `pick a number between 1 and ${this.attributes.searchResults.length}`;
     let speechOutput = `${index} is outside the range, Please ${reprompt}`;
     this.emit(':ask', speechOutput, reprompt);
   },

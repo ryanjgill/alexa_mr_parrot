@@ -25,6 +25,36 @@ function getSoundFromSoundy(term, cb) {
   });
 }
 
+function getIntro(count) {
+  let intro = '';
+
+  if (count === 2) {
+    return 'I found a pair of results';
+  }
+
+  if (count > 2 && count <= 5) {
+    return 'I found a few results';
+  }
+
+  if (count > 6 && count <= 12) {
+    return 'I found many results';
+  }
+
+  if (count > 13 && count <= 25) {
+    return 'Holy moley! I found a lot of results';
+  }
+
+  if (count > 26) {
+    return 'Lots of results found! Next time try to search for something a bit more specific, but for now';
+  }
+
+  return 'Results found';
+}
+
+function buildResponseWithNames (items) {
+  return items.map((item, index) => `${index+1}: ${item.name}`).join(', ');
+}
+
 exports.handler = function (event, context, callback) {
   let alexa = Alexa.handler(event, context);
   alexa.APP_ID = APP_ID;
@@ -86,17 +116,22 @@ let handlers = {
     this.emit(':tell', 'Goodbye!');
   },
   'MultipleSearchResults': function (results) {
-    let speechOutput = `I found a lot of answers, pick a number between 1 and ${results.length}.`
-    let reprompt = `Pick a number between 1 and ${results.length}.`;
+    let speechOutput = `${getIntro(results.length)}, pick a number between 1 and ${results.length}.`
+    
+    this.attributes['searchResults'] = results.slice(0,3);
 
-    this.attributes['searchResults'] = results;
+    let reprompt = `Pick a number between 1 and ${this.attributes['searchResults'].length}.`;
 
-    this.emit(':ask', speechOutput, reprompt);
+    let topThreeResponses = buildResponseWithNames(this.attributes['searchResults']);
+
+    let listResponse = `Here is a few matches. ${topThreeResponses}. ${reprompt}`;
+
+    this.emit(':ask', listResponse, reprompt);
   },
   'OutsideRange': function (index) {
     let totalResults = this.attributes.searchResults.length;
     let reprompt = `pick a number between 1 and ${this.attributes.searchResults.length}`;
-    let speechOutput = `${index+1} is outside the range, Please ${reprompt}`;
+    let speechOutput = `${index} is outside the range, Please ${reprompt}`;
     this.emit(':ask', speechOutput, reprompt);
   },
   'SelectResult': function () {
@@ -104,20 +139,25 @@ let handlers = {
       this.event.request.intent &&
       this.event.request.intent.slots &&
       this.event.request.intent.slots.ResultIndex
-      ? this.event.request.intent.slots.ResultIndex.value - 1
+      ? parseInt(this.event.request.intent.slots.ResultIndex.value)
       : 0;
 
-    if (index > this.attributes.searchResults.length - 1) {
+    if (index === NaN) {
+      this.emit('NotANumber');
+      return;
+    }
+
+    if (index > this.attributes.searchResults.length) {
       this.emit('OutsideRange', index);
       return;
     }
 
-    this.emit('PlayAudio', this.attributes.searchResults[index]);
+    this.emit('PlayAudio', this.attributes.searchResults[index - 1]);
   },
   'PlayAudio': function (audio) {
     // Play audio from url of matching clip
     let audioUrl = audio.url.split('.mp3')[0] + '.mp3';
-    let audioHtml = `<audio src='http:${audioUrl}' />`
+    let audioHtml = `<audio src='http:${audioUrl}' />`;
     let response = {
       version: '1.0',
       response: {
@@ -137,8 +177,25 @@ let handlers = {
           }
         ]
       }
-    }
+    };
 
     this.context.succeed(response);
+  },
+  'Unhandled': function () {
+    let hasSearchResults = this.attributes.hasOwnProperty('searchResults');
+
+    if (hasSearchResults) {
+      let count = this.attributes.searchResults.length;
+      this.emit(':ask', `Sorry, please say a number between 1 and ${count}.`);
+      return;
+    }
+
+    this.emit('AMAZON.HelpIntent');
+  },
+  'NotANumber': function () {
+    let count = this.attributes.searchResults.length;
+    let reprompt = `Try saying a number between 1 and ${count}.`
+    let speechOutput = `Sorry, I didn\'t get that. ${reprompt}`
+    this.emit(':ask', speechOutput, reprompt);
   }
 };

@@ -2,13 +2,13 @@
 Plays random audio clips based on search term.
 
 #### Engage Alexa like:
-`Alexa ask Parrot to imperonate Rick Sanchez.`
+`Alexa ask Mister Parrot to imperonate Rick Sanchez.`
 
-`Alexa ask Parrot to mimic dogs.`
+`Alexa ask Mister Parrot to mimic excellent.`
 
-`Alexa ask Parrot to imitate Mario.`
+`Alexa ask Mister Parrot to imitate Mario.`
 
-`Echo ask Parrot to imitate Wedding March.`
+`Echo ask Mister Parrot to imitate Wedding March.`
 
 ##### Links to Lamda and Alex skill
 So many things on aws, I loose track where these guys live.

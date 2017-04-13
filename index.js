@@ -3,52 +3,23 @@
 const Alexa = require('alexa-sdk')
   , request = require('request')
   , APP_ID = 'amzn1.ask.skill.93334129-07bd-478c-bec0-6a32768d0a89'
-  , SKILL_NAME = 'Parrot'
+  , SKILL_NAME = 'Mister Parrot'
   ;
 
 function getSoundFromSoundy(term, cb) {
   const baseUrl = `https://www.soundy.top/api/sounds`;
   let searchUrl = term ? `${baseUrl}?q=${term}` : baseUrl;
 
-  console.log('URL: ', searchUrl);
-
-  return request(searchUrl, function (error, response, body) {
+  request(searchUrl, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      return cb(null, JSON.parse(body));
+      cb(null, JSON.parse(body));
     } else {
-      console.log('ERROR: ', error);
-      return cb({
+      cb({
         type: 'service_down',
         term: term
       });
     }
   });
-}
-
-function getIntro(count) {
-  let intro = '';
-
-  if (count === 2) {
-    return 'I found a pair of results';
-  }
-
-  if (count > 2 && count <= 5) {
-    return 'I found a few results';
-  }
-
-  if (count > 6 && count <= 12) {
-    return 'I found many results';
-  }
-
-  if (count > 13 && count <= 25) {
-    return 'Holy moley! I found a lot of results';
-  }
-
-  if (count > 26) {
-    return 'Lots of results found! Next time try to search for something a bit more specific, but for now';
-  }
-
-  return 'Results found';
 }
 
 function buildResponseWithNames (items) {
@@ -77,16 +48,16 @@ let handlers = {
       ? this.event.request.intent.slots.Term.value
       : '';
 
-    getSoundFromSoundy(term, function (err, results) {
+    getSoundFromSoundy(term, (err, results) => {
       // if api error, respond with message saying its down
-      if (err && err.type === 'service_down') {
-        let speechOutput = `The sound a. p. i. service appears to be down. Please try again later.`;
-        this.emit(':tellWithCard', speechOutput, 'Search API is down', speechOutput);
+      if (err) {
+        let speechOutput = `The sound <say-as interpret-as="spell-out">api</say-as> is down at this time. Please try again later.`;
+        this.emit(':tellWithCard', speechOutput, 'Search API is down', 'API is down. Please try again later.');
         return;
       }
 
       // if no matching results, respond with search term.
-      if (results && results.length === 0) {
+      if (!results || (results && results.length === 0)) {
         let speechOutput = `I searched for term: ${term} but didn't find any matches.`;
         this.emit(':tellWithCard', speechOutput, 'No matching results', speechOutput);
         return;
@@ -99,10 +70,10 @@ let handlers = {
 
       // Play audio if only 1 result
       this.emit('PlayAudio', results[0]);
-    }.bind(this));
+    });
   },
   'AMAZON.HelpIntent': function () {
-    let reprompt = `What can I help you with?`
+    let reprompt = `ask me to mimic something?`
       , speechOutput = `You can ask me for a sound, or, you can say exit... ${reprompt}`
       ;
 
@@ -116,8 +87,6 @@ let handlers = {
     this.emit(':tell', 'Goodbye!');
   },
   'MultipleSearchResults': function (results) {
-    let speechOutput = `${getIntro(results.length)}, pick a number between 1 and ${results.length}.`
-    
     this.attributes['searchResults'] = results.slice(0,3);
 
     let reprompt = `Pick a number between 1 and ${this.attributes['searchResults'].length}.`;
@@ -152,7 +121,12 @@ let handlers = {
       return;
     }
 
-    this.emit('PlayAudio', this.attributes.searchResults[index - 1]);
+    if (index && index > 0) {
+      this.emit('PlayAudio', this.attributes.searchResults[index - 1]);
+      return;
+    }
+
+    this.emit('NotANumber');
   },
   'PlayAudio': function (audio) {
     // Play audio from url of matching clip

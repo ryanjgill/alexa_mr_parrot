@@ -37,7 +37,7 @@
         }
       },
       "application": {
-        "applicationId": "amzn1.ask.skill.[unique-value-here]"
+        "applicationId": "amzn1.ask.skill.93334129-07bd-478c-bec0-6a32768d0a89"
       },
       "user": {
         "userId": "amzn1.ask.account.[unique-value-here]"

@@ -28,7 +28,7 @@ function buildResponseWithNames (items) {
 
 exports.handler = function (event, context, callback) {
   let alexa = Alexa.handler(event, context);
-  alexa.APP_ID = APP_ID;
+  alexa.appId = APP_ID;
   alexa.registerHandlers(handlers);
   alexa.execute();
 };
@@ -111,12 +111,23 @@ let handlers = {
       ? parseInt(this.event.request.intent.slots.ResultIndex.value)
       : 0;
 
+    let max = this.attributes &&
+      this.attributes.searchResults &&
+      this.attributes.searchResults.length > 0
+      ? this.attributes.searchResults.length
+      : null;
+
+    if (!max) {
+      this.emit('AMAZON.HelpIntent');
+      return;
+    }
+
     if (index === NaN) {
       this.emit('NotANumber');
       return;
     }
 
-    if (index > this.attributes.searchResults.length) {
+    if (index > max) {
       this.emit('OutsideRange', index);
       return;
     }

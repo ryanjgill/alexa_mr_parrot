@@ -1,0 +1,84 @@
+{
+  "session": {
+    "new": false,
+    "sessionId": "amzn1.echo-api.session.[unique-value-here]",
+    "attributes": {
+      "searchResults": [
+        {
+          "id": 872,
+          "name": "Price Is Right Theme Song - Game Show Theme Songs",
+          "tags": [
+            "Price",
+            "I",
+            "Right",
+            "Theme",
+            "Song",
+            "Game",
+            "Show",
+            "Song"
+          ],
+          "url": "//soundyapp.s3.amazonaws.com/sounds/clips/000/000/872/original/price-is-right-theme-song-game-show-theme-songs20170317-4-1peh28i_copy.mp3?1489793066"
+        },
+        {
+          "id": 703,
+          "name": "the hills are alive",
+          "tags": [
+            "Soundofmusic"
+          ],
+          "url": "//soundyapp.s3.amazonaws.com/sounds/clips/000/000/703/original/the_hills_are_alive.mp3?1487446960"
+        },
+        {
+          "id": 693,
+          "name": "Disappointed",
+          "tags": [
+            "Hercule",
+            "Disappointed",
+            "Xena",
+            "WarriorPrincess"
+          ],
+          "url": "//soundyapp.s3.amazonaws.com/sounds/clips/000/000/693/original/disappointed20170218-4-l0pzcb_copy.mp3?1487446024"
+        }
+      ]
+    },
+    "user": {
+      "userId": "amzn1.ask.account.[unique-value-here]"
+    },
+    "application": {
+      "applicationId": "amzn1.ask.skill.[unique-value-here]"
+    }
+  },
+  "version": "1.0",
+  "request": {
+    "locale": "en-US",
+    "timestamp": "2016-10-27T21:06:28Z",
+    "type": "IntentRequest",
+    "requestId": "amzn1.echo-api.request.[unique-value-here]",
+    "intent": {
+      "slots": {
+        "ResultIndex": {
+          "name": "ResultIndex",
+          "value": "1"
+        }
+      },
+      "name": "SelectResult"
+    }
+  },
+  "context": {
+    "AudioPlayer": {
+      "playerActivity": "IDLE"
+    },
+    "System": {
+      "device": {
+        "supportedInterfaces": {
+          "AudioPlayer": {}
+        }
+      },
+      "application": {
+        "applicationId": "amzn1.ask.skill.93334129-07bd-478c-bec0-6a32768d0a89"
+      },
+      "user": {
+        "userId": "amzn1.ask.account.[unique-value-here]"
+      }
+    }
+  }
+}

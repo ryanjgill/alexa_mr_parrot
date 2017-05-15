@@ -64,6 +64,12 @@ let handlers = {
       }
 
       if (results && results.length > 1) {
+        // check if first result name matches term
+        if (results[0].name.trim().toLowerCase() === term.toLowerCase()) {
+          this.emit('PlayAudio', results[0]);
+          return;
+        }
+
         this.emit('MultipleSearchResults', results);
         return;
       }

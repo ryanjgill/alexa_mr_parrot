@@ -13,6 +13,8 @@ function getSoundFromSoundy(term, cb) {
   request(searchUrl, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       cb(null, JSON.parse(body));
+    } else if (error) {
+      cb(error);
     } else {
       cb({
         type: 'service_down',
@@ -24,6 +26,10 @@ function getSoundFromSoundy(term, cb) {
 
 function buildResponseWithNames (items) {
   return items.map((item, index) => `${index+1}: ${item.name}`).join(', ');
+}
+
+function scrubName(name) {
+  return name.replace(/[^\w\s]/gi, '').split(' ').join('').toLowerCase();
 }
 
 exports.handler = function (event, context, callback) {
@@ -44,13 +50,15 @@ let handlers = {
     let term = this.event.request &&
       this.event.request.intent &&
       this.event.request.intent.slots &&
-      this.event.request.intent.slots.Term
+      this.event.request.intent.slots.Term &&
+      this.event.request.intent.slots.hasOwnProperty('value')
       ? this.event.request.intent.slots.Term.value
       : '';
 
     getSoundFromSoundy(term, (err, results) => {
       // if api error, respond with message saying its down
       if (err) {
+        console.log(err);
         let speechOutput = `The sound <say-as interpret-as="spell-out">api</say-as> is down at this time. Please try again later.`;
         this.emit(':tellWithCard', speechOutput, 'Search API is down', 'API is down. Please try again later.');
         return;
@@ -65,7 +73,7 @@ let handlers = {
 
       if (results && results.length > 1) {
         // check if first result name matches term
-        if (results[0].name.trim().toLowerCase() === term.toLowerCase()) {
+        if (scrubName(results[0].name) === scrumbName(term)) {
           this.emit('PlayAudio', results[0]);
           return;
         }

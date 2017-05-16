@@ -10,12 +10,8 @@ function getSoundFromSoundy(term, cb) {
   const baseUrl = `https://www.soundy.top/api/sounds`;
   let searchUrl = term ? `${baseUrl}?q=${term}` : baseUrl;
 
-  console.log('Term: ', term);
-
   request(searchUrl, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log('Results: ', body);
-
       cb(null, JSON.parse(body));
     } else if (error) {
       cb(error);

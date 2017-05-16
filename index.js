@@ -73,7 +73,7 @@ let handlers = {
 
       if (results && results.length > 1) {
         // check if first result name matches term
-        if (scrubName(results[0].name) === scrumbName(term)) {
+        if (scrubName(results[0].name) === scrubName(term)) {
           this.emit('PlayAudio', results[0]);
           return;
         }

@@ -6,7 +6,7 @@ const scrubName = require('../utils/scrubName.js')
   ;
 
 describe('scrubName', function () {
-  it(`should name without special characters slammed together and lower cased`, function() {
+  it(`should return name without special characters slammed together and lower cased`, function() {
     let name = `I'm Mr. MeeSeeks, look at me.`,
     expectedOutput = `immrmeeseekslookatme`;
 

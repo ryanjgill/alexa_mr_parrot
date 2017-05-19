@@ -4,7 +4,7 @@
   "description": "Get sound clips from soundy",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "./node_modules/mocha/bin/_mocha --full-trace --recursive"
   },
   "keywords": [
     "alexa",
@@ -16,6 +16,12 @@
   "license": "MIT",
   "dependencies": {
     "alexa-sdk": "^1.0.0",
+    "bespoken-tools": "^0.9.44",
     "request": "^2.74.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "mocha": "^3.4.1"
   }
 }

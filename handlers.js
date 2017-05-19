@@ -98,6 +98,12 @@ module.exports = {
     let speechOutput = `${index} is outside the range, Please ${reprompt}`;
     this.emit(':ask', speechOutput, reprompt);
   },
+  'NotANumber': function () {
+    let count = this.attributes.searchResults.length;
+    let reprompt = `Try saying a number between 1 and ${count}.`
+    let speechOutput = `Sorry, I didn\'t get that. ${reprompt}`
+    this.emit(':ask', speechOutput, reprompt);
+  },
   'SelectResult': function () {
     let index = this.event.request &&
       this.event.request.intent &&
@@ -212,11 +218,5 @@ module.exports = {
     }
 
     this.emit('AMAZON.HelpIntent');
-  },
-  'NotANumber': function () {
-    let count = this.attributes.searchResults.length;
-    let reprompt = `Try saying a number between 1 and ${count}.`
-    let speechOutput = `Sorry, I didn\'t get that. ${reprompt}`
-    this.emit(':ask', speechOutput, reprompt);
   }
 };

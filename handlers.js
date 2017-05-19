@@ -60,7 +60,26 @@ module.exports = {
     this.emit(':tell', 'Goodbye!');
   },
   'AMAZON.StopIntent': function () {
-    this.emit(':tell', 'Goodbye!');
+    this.emit('ClearAudioAndExit');
+  },
+  'AMAZON.PauseIntent': function () {
+    this.emit('ClearAudioAndExit');
+  },
+  'ClearAudioAndExit': function () {
+    let response = {
+      version: '1.0',
+      response: {
+        shouldEndSession: true,
+        directives: [
+          {
+            type: 'AudioPlayer.ClearQueue',
+            clearBehavior: 'CLEAR_ALL'
+          }
+        ]
+      }
+    };
+
+    this.context.succeed(response);
   },
   'MultipleSearchResults': function (results) {
     this.attributes['searchResults'] = results.slice(0,3);
@@ -135,6 +154,47 @@ module.exports = {
                 offsetInMilliseconds: 0
               }
             }
+          }
+        ]
+      }
+    };
+
+    this.context.succeed(response);
+  },
+  'AudioPlayer.PlaybackStarted': function () {
+    this.context.succeed(true);
+  },
+  'AudioPlayer.PlaybackNearlyFinished': function () {
+    this.context.succeed(true);
+  },
+  'AudioPlayer.PlaybackFinished': function () {
+    let response = {
+      version: '1.0',
+      response: {
+        shouldEndSession: true,
+        directives: [
+          {
+            type: 'AudioPlayer.ClearQueue',
+            clearBehavior: 'CLEAR_ENQUEUED'
+          }
+        ]
+      }
+    };
+
+    this.context.succeed(response);
+  },
+  'AudioPlayer.PlaybackStopped': function () {
+    this.context.succeed(true);
+  },
+  'AudioPlayer.PlaybackFailed': function () {
+    let response = {
+      version: '1.0',
+      response: {
+        shouldEndSession: true,
+        directives: [
+          {
+            type: 'AudioPlayer.ClearQueue',
+            clearBehavior: 'CLEAR_ENQUEUED'
           }
         ]
       }

@@ -174,6 +174,9 @@ module.exports = {
     this.context.succeed(true);
   },
   'AudioPlayer.PlaybackFinished': function () {
+    this.context.succeed(true);
+  },
+  'AudioPlayer.PlaybackStopped': function () {
     let response = {
       version: '1.0',
       response: {
@@ -188,9 +191,6 @@ module.exports = {
     };
 
     this.context.succeed(response);
-  },
-  'AudioPlayer.PlaybackStopped': function () {
-    this.context.succeed(true);
   },
   'AudioPlayer.PlaybackFailed': function () {
     let response = {

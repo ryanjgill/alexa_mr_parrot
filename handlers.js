@@ -10,6 +10,7 @@ module.exports = {
     this.emit('SearchForSound');
   },
   'SearchForSound': function () {
+    let stopWords = ['stop', 'quit', 'shut up', 'exit', 'cancel'];
     let term = this.event.request &&
       this.event.request.intent &&
       this.event.request.intent.slots &&
@@ -17,6 +18,11 @@ module.exports = {
       this.event.request.intent.slots.Term.hasOwnProperty('value')
       ? this.event.request.intent.slots.Term.value
       : '';
+
+    if (stopWords.indexOf(term.toLowerCase().trim()) > -1) {
+     this.emit('AMAZON.StopIntent');
+     return;
+    }
 
     getSoundFromSoundy(term, (err, results) => {
       // if api error, respond with message saying its down
